@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>获奖查询</title>
+<style>
+body{font-family:微软雅黑;background:#f5f5f5;padding:20px;max-width:400px;margin:0 auto;}
+.card{background:white;padding:25px;border-radius:12px;box-shadow:0 2px 10px #00000010;}
+h2{text-align:center;color:#c72e2d;margin-top:0;}
+input{width:100%;padding:12px;margin:8px 0;box-sizing:border-box;border:1px solid #ddd;border-radius:6px;}
+button{width:100%;padding:12px;background:#c72e2d;color:white;border:none;border-radius:6px;font-size:16px;margin-top:10px;cursor:pointer;}
+.result{margin-top:20px;padding:15px;background:#f8f9fa;border-radius:6px;text-align:center;font-size:16px;display:none;}
+.tips{font-size:12px;color:#999;text-align:center;margin-top:5px;}
+.code-highlight{color:#c72e2d;font-weight:bold;}
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>获奖查询</h2>
+  <input id="name" placeholder="请输入姓名（如：张三）">
+  <input id="code" placeholder="请输入下方查询验证码" type="text">
+  <div class="tips">本次查询验证码：<span class="code-highlight" id="randomCode"></span>（刷新页面会变更）</div>
+  <button onclick="searchPrize()">立即查询</button>
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+// 1. 生成6位随机数字验证码
+function generateRandomCode() {
+  // 生成0-999999之间的随机数，不足6位补0
+  return Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+}
+
+// 2. 初始化随机验证码并显示在页面上
+let randomValidCode = generateRandomCode();
+document.getElementById("randomCode").textContent = randomValidCode;
+
+// 3. 完整获奖名单（已按你提供的信息录入）
+const prizeList = [
+  // 一等奖（8名）
+  { name: "郑潇", prize: "一等奖" },
+  { name: "陈緦榆", prize: "一等奖" },
+  { name: "崔燕燕", prize: "一等奖" },
+  { name: "黄珍烨", prize: "一等奖" },
+  { name: "杨靖一", prize: "一等奖" },
+  { name: "吴姝畅", prize: "一等奖" },
+  { name: "梁清贤", prize: "一等奖" },
+  { name: "陈佳靓", prize: "一等奖" },
+  
+  // 二等奖（15名）
+  { name: "赵岩", prize: "二等奖" },
+  { name: "郭晶", prize: "二等奖" },
+  { name: "于竞烧", prize: "二等奖" },
+  { name: "陈宇馨", prize: "二等奖" },
+  { name: "梁雨馨", prize: "二等奖" },
+  { name: "韦柏宇", prize: "二等奖" },
+  { name: "张震宗", prize: "二等奖" },
+  { name: "王珂珂", prize: "二等奖" },
+  { name: "吴佳翱", prize: "二等奖" },
+  { name: "栗瑜泽", prize: "二等奖" },
+  { name: "李昕", prize: "二等奖" },
+  { name: "石婉聪", prize: "二等奖" },
+  { name: "马小倩", prize: "二等奖" },
+  { name: "余娜", prize: "二等奖" },
+  { name: "陈丽羽", prize: "二等奖" },
+  
+  // 三等奖（9名）
+  { name: "孙馨丽", prize: "三等奖" },
+  { name: "杨芷凌", prize: "三等奖" },
+  { name: "陈俊瑜", prize: "三等奖" },
+  { name: "才子淇", prize: "三等奖" },
+  { name: "谢俊霞", prize: "三等奖" },
+  { name: "胡海霞", prize: "三等奖" },
+  { name: "刘佳怡", prize: "三等奖" },
+  { name: "陈智佩", prize: "三等奖" },
+  { name: "覃鑫", prize: "三等奖" }
+];
+
+// 查询逻辑
+function searchPrize() {
+  const nameInput = document.getElementById("name").value.trim();
+  const codeInput = document.getElementById("code").value.trim();
+  const resultBox = document.getElementById("result");
+  
+  // 清空结果框
+  resultBox.style.display = "none";
+  
+  // 1. 验证验证码（匹配当前页面生成的随机验证码）
+  if (codeInput !== randomValidCode) {
+    resultBox.textContent = "❌ 验证码错误，请核对页面上的验证码重新输入";
+    resultBox.style.display = "block";
+    return;
+  }
+  
+  // 2. 验证姓名是否为空
+  if (!nameInput) {
+    resultBox.textContent = "❌ 请输入姓名后再查询";
+    resultBox.style.display = "block";
+    return;
+  }
+  
+  // 3. 查询获奖等级
+  const findResult = prizeList.find(item => item.name === nameInput);
+  if (findResult) {
+    resultBox.textContent = `✅ 恭喜！${nameInput} 获得 ${findResult.prize}`;
+    resultBox.style.display = "block";
+  } else {
+    resultBox.textContent = `❌ 未查询到${nameInput}的获奖信息，请核对姓名`;
+    resultBox.style.display = "block";
+  }
+}
+</script>
+</body>
+</html>
