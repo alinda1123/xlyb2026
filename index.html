@@ -1,207 +1,190 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Microsoft YaHei", sans-serif;
-        }
-        body {
-            background-color: #f5f7fa;
-            padding: 30px 20px;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        .title {
-            text-align: center;
-            font-size: 24px;
-            color: #2c3e50;
-            margin-bottom: 30px;
-            font-weight: bold;
-            line-height: 1.4;
-        }
-        .form-item {
-            margin-bottom: 20px;
-        }
-        .form-item label {
-            display: block;
-            font-size: 15px;
-            color: #34495e;
-            margin-bottom: 8px;
-        }
-        .input-box {
-            width: 100%;
-            padding: 12px 15px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            outline: none;
-        }
-        .input-box:focus {
-            border-color: #3498db;
-            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
-        }
-        .captcha-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .captcha-code {
-            width: 120px;
-            height: 42px;
-            background: #eef5ff;
-            border: 1px solid #cce0ff;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: bold;
-            color: #2c3e50;
-            letter-spacing: 2px;
-            cursor: pointer;
-            user-select: none;
-        }
-        .query-btn {
-            width: 100%;
-            padding: 14px;
-            background: #3498db;
-            color: white;
-            font-size: 17px;
-            font-weight: bold;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .query-btn:hover {
-            background: #2980b9;
-        }
-        .result-box {
-            margin-top: 25px;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            display: none;
-        }
-        .result-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #e74c3c;
-            text-align: center;
-        }
-        .result-content {
-            font-size: 16px;
-            color: #2c3e50;
-            line-height: 1.6;
-            text-align: center;
-        }
-        .no-result {
-            color: #95a5a6;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>杏林易班医籍新语·青春译典主题活动获奖查询系统</title>
+<style>
+    body {
+        font-family: "微软雅黑";
+        background: linear-gradient(to right, #e8f5e9, #ffffff);
+        text-align: center;
+        padding-top: 80px;
+    }
+    .box {
+        background: white;
+        width: 450px;
+        margin: auto;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+        color: #2E7D32;
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+    input {
+        width: 85%;
+        padding: 10px;
+        margin: 10px;
+        font-size: 15px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    button {
+        padding: 10px 20px;
+        background: #2E7D32;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    button:hover {
+        background: #1b5e20;
+    }
+    #result {
+        margin-top: 20px;
+        font-size: 17px;
+        color: #333;
+        font-weight: bold;
+    }
+    #captcha {
+        font-weight: bold;
+        color: #d84315;
+        font-size: 18px;
+        margin: 0 10px;
+    }
+    .footer {
+        margin-top: 20px;
+        font-size: 12px;
+        color: #888;
+    }
+</style>
 </head>
+
 <body>
-    <div class="title">“易”启新程，跃动青春 活动获奖情况查询</div>
 
-    <div class="form-item">
-        <label>请输入你的姓名</label>
-        <input type="text" class="input-box" id="userName" placeholder="请输入真实姓名">
+<div class="box">
+    <h2>杏林易班医籍新语·青春译典主题活动<br>获奖查询系统</h2>
+
+    <input type="text" id="name" placeholder="请输入姓名"><br>
+
+    <div>
+        验证码：<span id="captcha"></span>
+        <button onclick="generateCaptcha()">刷新</button>
     </div>
 
-    <div class="form-item">
-        <label>请输入验证码</label>
-        <div class="captcha-row">
-            <input type="text" class="input-box" id="captchaInput" placeholder="输入右侧验证码">
-            <div class="captcha-code" id="captchaCode" onclick="refreshCaptcha()"></div>
-        </div>
+    <input type="text" id="inputCaptcha" placeholder="请输入验证码"><br>
+
+    <button onclick="search()">查询</button>
+
+    <div id="result"></div>
+
+    <div class="footer">
+        温馨提示：请输入完整姓名进行查询
     </div>
+</div>
 
-    <button class="query-btn" onclick="queryPrize()">点击查询获奖情况</button>
+<script>
+// ===== 数据 =====
+const data = {
+    "唐韵知":"一等奖｜95",
+    "郑潇":"一等奖｜94",
+    "吕依芳":"一等奖｜94",
+    "白晨":"一等奖｜94",
+    "刘星":"一等奖｜94",
+    "张琬婷":"一等奖｜94",
+    "钟欣":"一等奖｜95",
+    "李全霖":"一等奖｜94",
+    "安云梦":"一等奖｜95",
+    "黄艳清":"一等奖｜94",
 
-    <div class="result-box" id="resultBox">
-        <div class="result-title" id="resultTitle"></div>
-        <div class="result-content" id="resultContent"></div>
-    </div>
+    "李倩":"二等奖｜92",
+    "陈月":"二等奖｜92",
+    "王珂珂":"二等奖｜92",
+    "李昕":"二等奖｜92",
+    "邓豪杰":"二等奖｜92",
+    "唐莹":"二等奖｜93",
+    "覃少敏":"二等奖｜93",
+    "杨海凌":"二等奖｜92",
+    "刘欣宇":"二等奖｜92",
+    "唐燕":"二等奖｜92",
+    "税莹":"二等奖｜92",
+    "何佳惠":"二等奖｜92",
+    "滕妍":"二等奖｜92",
+    "王慧茹":"二等奖｜92",
+    "曹梓":"二等奖｜92",
+    "覃塘":"二等奖｜92",
+    "肖坤达":"二等奖｜92",
+    "崔震":"二等奖｜92",
 
-    <script>
-        // 获奖数据
-        const prizeData = {
-            "一等奖": ["杨海凌", "吴春晨", "吴佳翱", "夏思莹", "马小倩", "王珂珂", "李昕", "杨靖一", "唐韵知", "钟欣"],
-            "二等奖": ["相梦", "侯锦涵", "刘子梦", "杨丽萍", "李琼", "黄艳清", "谢俊霞", "陈屿域", "蒋佩璇", "刘加兴", "陈月", "童瑶"],
-            "三等奖": ["滕妍", "赵岩", "石婉聪", "胡天睿", "刘欣宇"],
-            "参与奖": ["翁欣怡", "尚相妩", "孔维唱", "邹涵睿", "刘韵", "李雨昕", "杨芷凌", "胡天睿", "杜昕睿", "谢释庆", "冯睿锴", "庹家豪", "李曦文", "陈静", "刘惜雨", "胡海霞", "张淼", "何淑文", "陈智佩", "易友89347650", "易友99426614", "曼淇2025070401", "易友67027845", "小浣熊干脆面"]
-        };
+    "刘加兴":"三等奖｜92",
+    "谢思语":"三等奖｜91",
+    "谢俊霞":"三等奖｜91",
+    "唐芷":"三等奖｜91",
+    "谭佳敏":"三等奖｜91",
+    "蒋佩璇":"三等奖｜91",
+    "李波":"三等奖｜91",
+    "刘佳":"三等奖｜91",
+    "陈兰兰":"三等奖｜91",
+    "尹曼淇":"三等奖｜91",
+    "相梦":"三等奖｜91",
+    "赵岩":"三等奖｜91",
+    "林嗣策":"三等奖｜90",
+    "梁雨馨":"三等奖｜90",
+    "罗秋蓝":"三等奖｜90",
+    "唐倩":"三等奖｜90",
+    "庹家豪":"三等奖｜90",
+    "宋海燕":"三等奖｜90",
+    "唐晓曼":"三等奖｜90",
+    "夏思莹":"三等奖｜90",
+    "杨靖一":"三等奖｜90",
+    "黄飞燕":"三等奖｜90",
+    "刘美莹":"三等奖｜90",
+    "唐靓":"三等奖｜90",
+    "马小倩":"三等奖｜90",
+    "崔燕燕":"三等奖｜90",
+    "李诗涵":"三等奖｜89",
+    "雷怡":"三等奖｜89",
+    "沈一":"三等奖｜88",
+    "余祈珍":"三等奖｜89",
 
-        let currentCaptcha = "";
+    "陈雨琪":"参与奖｜87",
+    "刘欢":"参与奖｜87",
+    "陈智佩":"参与奖",
+    "曾另德":"参与奖｜87"
+};
 
-        // 页面加载 → 生成验证码
-        window.onload = function () {
-            refreshCaptcha();
-        };
+// ===== 验证码 =====
+let currentCaptcha = "";
 
-        // 生成随机验证码（字母+数字）
-        function refreshCaptcha() {
-            const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            let code = "";
-            for (let i = 0; i < 4; i++) {
-                code += chars[Math.floor(Math.random() * chars.length)];
-            }
-            currentCaptcha = code;
-            document.getElementById("captchaCode").innerText = code;
-        }
+function generateCaptcha() {
+    currentCaptcha = Math.random().toString(36).substring(2,6).toUpperCase();
+    document.getElementById("captcha").innerText = currentCaptcha;
+}
 
-        // 查询功能
-        function queryPrize() {
-            const name = document.getElementById("userName").value.trim();
-            const inputCaptcha = document.getElementById("captchaInput").value.trim().toUpperCase();
-            const resultBox = document.getElementById("resultBox");
-            const resultTitle = document.getElementById("resultTitle");
-            const resultContent = document.getElementById("resultContent");
+// ===== 查询 =====
+function search() {
+    const name = document.getElementById("name").value.trim();
+    const inputCaptcha = document.getElementById("inputCaptcha").value.trim().toUpperCase();
+    const result = document.getElementById("result");
 
-            // 校验
-            if (!name) {
-                alert("请输入姓名！");
-                return;
-            }
-            if (!inputCaptcha) {
-                alert("请输入验证码！");
-                return;
-            }
-            if (inputCaptcha !== currentCaptcha) {
-                alert("验证码错误！");
-                refreshCaptcha();
-                return;
-            }
+    if(inputCaptcha !== currentCaptcha) {
+        result.innerHTML = "❌ 验证码错误";
+        return;
+    }
 
-            // 查找获奖信息
-            let prizeResult = "未获奖";
-            for (let prize in prizeData) {
-                if (prizeData[prize].includes(name)) {
-                    prizeResult = prize;
-                    break;
-                }
-            }
+    if(data[name]) {
+        result.innerHTML = "🎉 " + name + "：" + data[name];
+    } else {
+        result.innerHTML = "⚠ 未查询到该姓名";
+    }
+}
 
-            // 显示结果
-            resultBox.style.display = "block";
-            if (prizeResult !== "未获奖") {
-                resultTitle.innerText = "🎉 恭喜你获奖！";
-                resultContent.innerText = `姓名：${name}\n奖项：${prizeResult}`;
-                resultContent.style.color = "#2c3e50";
-            } else {
-                resultTitle.innerText = "查询结果";
-                resultContent.innerText = `姓名：${name}\n未查询到获奖信息`;
-                resultContent.style.color = "#95a5a6";
-            }
-        }
-    </script>
+// 初始化
+generateCaptcha();
+</script>
+
 </body>
 </html>
